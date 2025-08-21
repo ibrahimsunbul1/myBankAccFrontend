@@ -53,20 +53,18 @@ function Login({ onLogin }) {
           
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
-              <label htmlFor="username">Kullanıcı Adı</label>
               <input
                 type="text"
                 id="username"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="Kullanıcı adınızı girin"
+                placeholder="T.C. Kimlik / Müşteri Numaranız"
                 disabled={isLoading}
               />
             </div>
             
             <div className="form-group">
-              <label htmlFor="password">Şifre</label>
               <input
                 type="password"
                 id="password"

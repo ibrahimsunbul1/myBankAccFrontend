@@ -1,33 +1,32 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage({ currentUser, onLogout }) {
   return (
-    <div className="App">
-      {/* Header */}
-      <header className="bank-header">
-        <div className="header-container">
-          <div className="logo">
-            <h1>MyBank</h1>
-          </div>
-          <nav className="main-nav">
-            <ul>
-              <li><a href="#home">Ana Sayfa</a></li>
-              <li><a href="#accounts">Hesaplarım</a></li>
-              <li><a href="#transfer">Para Transferi</a></li>
-              <li><a href="#payments">Ödemeler</a></li>
-              <li><a href="#support">Destek</a></li>
-            </ul>
-          </nav>
+    <div className="home-container">
+      <header className="main-header">
+        <div className="header-content">
+          <h1>Banka Hesap Yönetimi</h1>
           <div className="user-info">
             <span>Hoş geldiniz, {currentUser}</span>
-            <button className="logout-btn" onClick={onLogout}>Çıkış</button>
+            <button onClick={onLogout} className="logout-btn">Çıkış Yap</button>
           </div>
         </div>
       </header>
-
-      {/* Main Content */}
-      <main className="main-content">
+      
+      <div className="main-layout">
+        <nav className="sidebar-nav">
+          <ul>
+            <li><Link to="/" className="active">Ana Sayfa</Link></li>
+            <li><Link to="/accounts">Hesaplarım</Link></li>
+            <li><Link to="/transfer">Para Transferi</Link></li>
+            <li><a href="#cards">Kartlarım</a></li>
+            <li><a href="#loans">Krediler</a></li>
+          </ul>
+        </nav>
+        
+        <main className="main-content">
         <div className="container">
           {/* Welcome Section */}
           <section className="welcome-section">
@@ -97,13 +96,11 @@ function HomePage({ currentUser, onLogout }) {
             </div>
           </section>
         </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="bank-footer">
-        <div className="container">
-          <p>&copy; 2024 MyBank. Tüm hakları saklıdır.</p>
-        </div>
+        </main>
+      </div>
+      
+      <footer className="main-footer">
+        <p>&copy; 2024 Banka Hesap Yönetimi. Tüm hakları saklıdır.</p>
       </footer>
     </div>
   );
