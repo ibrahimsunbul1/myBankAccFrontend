@@ -20,7 +20,7 @@
 
 /* Header Styles */
 .bank-header {
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  background: linear-gradient(135deg, #222831 0%, #393E46 100%);
   color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -98,7 +98,7 @@
 .welcome-section h2 {
   font-size: 32px;
   margin-bottom: 30px;
-  color: #2c3e50;
+  color: #222831;
   font-weight: 600;
 }
 
@@ -110,7 +110,7 @@
 }
 
 .account-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #393E46 0%, #948979 100%);
   color: white;
   padding: 30px;
   border-radius: 15px;
@@ -149,7 +149,7 @@
 .quick-actions h3 {
   font-size: 24px;
   margin-bottom: 25px;
-  color: #2c3e50;
+  color: #222831;
   font-weight: 600;
 }
 
@@ -161,7 +161,7 @@
 
 .action-btn {
   background: white;
-  border: 2px solid #e1e8ed;
+  border: 2px solid #948979;
   padding: 25px 20px;
   border-radius: 12px;
   cursor: pointer;
@@ -172,15 +172,15 @@
   gap: 10px;
   font-size: 16px;
   font-weight: 500;
-  color: #2c3e50;
+  color: #222831;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .action-btn:hover {
-  border-color: #3498db;
+  border-color: #393E46;
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
-  background-color: #f8fbff;
+  box-shadow: 0 8px 25px rgba(57, 62, 70, 0.15);
+  background-color: #DFD0B8;
 }
 
 .action-btn .icon {
@@ -198,7 +198,7 @@
 .recent-transactions h3 {
   font-size: 24px;
   margin-bottom: 25px;
-  color: #2c3e50;
+  color: #222831;
   font-weight: 600;
 }
 
@@ -213,14 +213,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: #DFD0B8;
   border-radius: 10px;
-  border-left: 4px solid #e1e8ed;
+  border-left: 4px solid #948979;
   transition: all 0.3s ease;
 }
 
 .transaction-item:hover {
-  background-color: #f1f3f4;
+  background-color: #948979;
   transform: translateX(5px);
 }
 
@@ -232,12 +232,12 @@
 
 .transaction-type {
   font-weight: 600;
-  color: #2c3e50;
+  color: #222831;
   font-size: 16px;
 }
 
 .transaction-date {
-  color: #7f8c8d;
+  color: #393E46;
   font-size: 14px;
 }
 
@@ -256,7 +256,7 @@
 
 /* Footer */
 .bank-footer {
-  background-color: #2c3e50;
+  background-color: #222831;
   color: white;
   padding: 20px 0;
   text-align: center;
