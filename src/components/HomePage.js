@@ -21,81 +21,75 @@ function HomePage({ currentUser, onLogout }) {
             <li><Link to="/" className="active">Ana Sayfa</Link></li>
             <li><Link to="/accounts">Hesaplarım</Link></li>
             <li><Link to="/transfer">Para Transferi</Link></li>
-            <li><a href="#cards">Kartlarım</a></li>
-            <li><a href="#loans">Krediler</a></li>
+            <li><Link to="/payments">Ödemeler</Link></li>
           </ul>
         </nav>
         
         <main className="main-content">
-        <div className="container">
-          {/* Welcome Section */}
-          <section className="welcome-section">
+          {/* Hero Section */}
+          <section className="hero-section">
+            <div className="hero-content">
+              <h1>Hoş Geldiniz, {currentUser}</h1>
+              <p>Bankacılık işlemlerinizi güvenle gerçekleştirin</p>
+            </div>
+          </section>
+
+          {/* Account Summary */}
+          <section className="account-summary">
             <h2>Hesap Özeti</h2>
-            <div className="account-cards">
-              <div className="account-card">
-                <h3>Vadesiz Hesap</h3>
-                <p className="account-number">****1234</p>
-                <p className="balance">₺15,750.50</p>
+            <div className="summary-cards">
+              <div className="summary-card">
+                <div className="card-header">
+                  <h3>Toplam Bakiye</h3>
+                </div>
+                <div className="card-amount">₺68,250.50</div>
               </div>
-              <div className="account-card">
-                <h3>Vadeli Hesap</h3>
-                <p className="account-number">****5678</p>
-                <p className="balance">₺50,000.00</p>
+              
+              <div className="summary-card">
+                <div className="card-header">
+                  <h3>Kullanılabilir Bakiye</h3>
+                </div>
+                <div className="card-amount">₺15,750.50</div>
+              </div>
+              
+              <div className="summary-card">
+                <div className="card-header">
+                  <h3>Vadeli Hesap</h3>
+                </div>
+                <div className="card-amount">₺50,000.00</div>
               </div>
             </div>
           </section>
 
-          {/* Quick Actions */}
-          <section className="quick-actions">
-            <h3>Hızlı İşlemler</h3>
-            <div className="action-buttons">
-              <button className="action-btn">
-                <span className="icon">💸</span>
-                Para Transferi
-              </button>
-              <button className="action-btn">
-                <span className="icon">💳</span>
-                Fatura Ödeme
-              </button>
-              <button className="action-btn">
-                <span className="icon">📱</span>
-                Mobil Ödeme
-              </button>
-              <button className="action-btn">
-                <span className="icon">📊</span>
-                Hesap Hareketleri
-              </button>
-            </div>
-          </section>
-
-          {/* Recent Transactions */}
-          <section className="recent-transactions">
-            <h3>Son İşlemler</h3>
-            <div className="transaction-list">
-              <div className="transaction-item">
-                <div className="transaction-info">
-                  <span className="transaction-type">Para Transferi</span>
-                  <span className="transaction-date">15.01.2024</span>
-                </div>
-                <span className="transaction-amount negative">-₺500.00</span>
+          {/* Services Grid */}
+          <section className="services-section">
+            <h2>Bankacılık Hizmetleri</h2>
+            <div className="services-grid">
+              <div className="service-item">
+                <div className="service-icon">💳</div>
+                <h4>Kart İşlemleri</h4>
+                <p>Kredi kartı ve banka kartı işlemleri</p>
               </div>
-              <div className="transaction-item">
-                <div className="transaction-info">
-                  <span className="transaction-type">Maaş Yatırımı</span>
-                  <span className="transaction-date">01.01.2024</span>
-                </div>
-                <span className="transaction-amount positive">+₺8,500.00</span>
+              
+              <div className="service-item">
+                <div className="service-icon">💰</div>
+                <h4>Krediler</h4>
+                <p>İhtiyaç, konut ve taşıt kredileri</p>
               </div>
-              <div className="transaction-item">
-                <div className="transaction-info">
-                  <span className="transaction-type">Fatura Ödemesi</span>
-                  <span className="transaction-date">28.12.2023</span>
-                </div>
-                <span className="transaction-amount negative">-₺125.75</span>
+              
+              <div className="service-item">
+                <div className="service-icon">📊</div>
+                <h4>Yatırım</h4>
+                <p>Mevduat ve yatırım ürünleri</p>
+              </div>
+              
+              <div className="service-item">
+                <div className="service-icon">🏦</div>
+                <h4>Şube İşlemleri</h4>
+                <p>Şube ve ATM hizmetleri</p>
               </div>
             </div>
           </section>
-        </div>
         </main>
       </div>
       

@@ -5,6 +5,7 @@ import Login from './components/Login';
 import HomePage from './components/HomePage';
 import Accounts from './components/Accounts';
 import MoneyTransfer from './components/MoneyTransfer';
+import Payments from './components/Payments';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/" element={<HomePage currentUser={currentUser} onLogout={handleLogout} />} />
             <Route path="/accounts" element={<Accounts currentUser={currentUser} onLogout={handleLogout} />} />
             <Route path="/transfer" element={<MoneyTransfer currentUser={currentUser} onLogout={handleLogout} />} />
+            <Route path="/payments" element={<Payments currentUser={currentUser} onLogout={handleLogout} />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}

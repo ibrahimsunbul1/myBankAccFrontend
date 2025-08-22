@@ -8,7 +8,7 @@
 }
 
 .login-background {
-  background: linear-gradient(135deg, #393E46 0%, #222831 100%);
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -30,7 +30,7 @@
 }
 
 .login-card {
-  background: rgba(223, 208, 184, 0.95);
+  background: rgba(249, 243, 239, 0.95);
   border-radius: 20px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
   padding: 40px;
@@ -38,7 +38,7 @@
   max-width: 450px;
   position: relative;
   z-index: 1;
-  border: 1px solid rgba(148, 137, 121, 0.3);
+  border: 1px solid rgba(210, 193, 182, 0.3);
 }
 
 .login-header {
@@ -49,7 +49,7 @@
 .bank-logo {
   font-size: 36px;
   font-weight: bold;
-  background: linear-gradient(135deg, #222831 0%, #393E46 100%);
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -57,7 +57,7 @@
 }
 
 .login-subtitle {
-  color: #222831;
+  color: #1B3C53;
   font-size: 16px;
   margin: 0;
   opacity: 0.8;
@@ -77,13 +77,13 @@
 
 .form-group label {
   font-weight: 600;
-  color: #2c3e50;
+  color: #1B3C53;
   font-size: 14px;
 }
 
 .form-group input {
   padding: 15px;
-  border: 2px solid #948979;
+  border: 2px solid #D2C1B6;
   border-radius: 10px;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -92,9 +92,9 @@
 
 .form-group input:focus {
   outline: none;
-  border-color: #393E46;
-  background-color: #DFD0B8;
-  box-shadow: 0 0 0 3px rgba(57, 62, 70, 0.1);
+  border-color: #456882;
+  background-color: #F9F3EF;
+  box-shadow: 0 0 0 3px rgba(69, 104, 130, 0.1);
 }
 
 .form-group input:disabled {
@@ -118,7 +118,7 @@
 }
 
 .login-button {
-  background: linear-gradient(135deg, #222831 0%, #393E46 100%);
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
   color: white;
   border: none;
   padding: 15px 30px;
@@ -132,7 +132,7 @@
 
 .login-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(34, 40, 49, 0.3);
+  box-shadow: 0 8px 25px rgba(27, 60, 83, 0.3);
 }
 
 .login-button:active:not(:disabled) {

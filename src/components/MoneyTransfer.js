@@ -134,8 +134,7 @@ function MoneyTransfer({ currentUser, onLogout }) {
             <li><Link to="/">Ana Sayfa</Link></li>
             <li><Link to="/accounts">Hesaplarım</Link></li>
             <li><Link to="/transfer" className="active">Para Transferi</Link></li>
-            <li><a href="#cards">Kartlarım</a></li>
-            <li><a href="#loans">Krediler</a></li>
+            <li><Link to="/payments">Ödemeler</Link></li>
           </ul>
         </nav>
         
