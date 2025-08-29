@@ -1,8 +1,93 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage({ currentUser, onLogout }) {
+  const [accounts, setAccounts] = useState([]);
+  const [totalBalance, setTotalBalance] = useState(0);
+  const [availableBalance, setAvailableBalance] = useState(0);
+  const [fixedDeposit, setFixedDeposit] = useState(0);
+  const [recentTransactions, setRecentTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+      
+      // Önce kullanıcının oturum açıp açmadığını kontrol et
+      const authResponse = await fetch('http://localhost:8080/api/auth/me', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!authResponse.ok) {
+        setError('Oturum açmanız gerekiyor');
+        return;
+      }
+
+      // Kullanıcı hesaplarını çek
+      const accountsResponse = await fetch('http://localhost:8080/api/accounts', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (accountsResponse.ok) {
+        const accountsData = await accountsResponse.json();
+        setAccounts(accountsData);
+        
+        // Toplam bakiye hesapla
+        let total = 0;
+        let available = 0;
+        let fixed = 0;
+        
+        accountsData.forEach(account => {
+          total += parseFloat(account.balance || 0);
+          if (account.accountType === 'SAVINGS') {
+            available += parseFloat(account.balance || 0);
+          } else if (account.accountType === 'FIXED_DEPOSIT') {
+            fixed += parseFloat(account.balance || 0);
+          }
+        });
+        
+        setTotalBalance(total);
+        setAvailableBalance(available);
+        setFixedDeposit(fixed);
+      }
+    } catch (err) {
+      setError('Veriler yüklenirken hata oluştu');
+      console.error('Error fetching user data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="home-container">
+        <div className="loading">Yükleniyor...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="home-container">
+        <div className="error">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="home-container">
       <header className="main-header">
@@ -42,21 +127,21 @@ function HomePage({ currentUser, onLogout }) {
                 <div className="card-header">
                   <h3>Toplam Bakiye</h3>
                 </div>
-                <div className="card-amount">₺68,250.50</div>
+                <div className="card-amount">₺{totalBalance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
               
               <div className="summary-card">
                 <div className="card-header">
                   <h3>Kullanılabilir Bakiye</h3>
                 </div>
-                <div className="card-amount">₺15,750.50</div>
+                <div className="card-amount">₺{availableBalance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
               
               <div className="summary-card">
                 <div className="card-header">
                   <h3>Vadeli Hesap</h3>
                 </div>
-                <div className="card-amount">₺50,000.00</div>
+                <div className="card-amount">₺{fixedDeposit.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
             </div>
           </section>
