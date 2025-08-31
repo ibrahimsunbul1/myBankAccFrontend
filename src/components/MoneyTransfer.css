@@ -372,6 +372,8 @@
   
   .header-content {
     padding: 0 1rem;
+    max-width: 720px;
+    margin: 0 auto;
   }
   
   .header-content h1 {
@@ -402,6 +404,22 @@
     margin-top: 60px;
     padding: 1rem;
     min-height: calc(100vh - 60px);
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+  
+  .transfer-form {
+    margin: 0 0.5rem;
+  }
+  
+  .recent-transfers {
+    margin: 0 0.5rem;
   }
 }
 
@@ -411,9 +429,7 @@
     min-width: 220px;
   }
   
-  .main-content {
-    margin-left: 220px;
-  }
+  
   
   .header-content h1 {
     font-size: 1.75rem;
@@ -427,7 +443,7 @@
   }
   
   .main-content {
-    margin-left: 250px;
+  
     padding: 2rem;
   }
   
@@ -443,6 +459,8 @@
   
   .header-content {
     padding: 0 0.75rem;
+    max-width: 100%;
+    margin: 0 auto;
   }
   
   .header-content h1 {
@@ -456,6 +474,22 @@
   .main-content {
     margin-top: 50px;
     padding: 0.75rem;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0 0.25rem;
+  }
+  
+  .transfer-form {
+    margin: 0 0.25rem;
+  }
+  
+  .recent-transfers {
+    margin: 0 0.25rem;
   }
 }
 

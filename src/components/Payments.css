@@ -656,6 +656,8 @@
   
   .header-content {
     padding: 0 1rem;
+    max-width: 720px;
+    margin: 0 auto;
   }
   
   .header-content h1 {
@@ -686,17 +688,26 @@
     margin-left: 0;
     margin-top: 60px;
     padding: 1rem;
-    width: 100vw;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
     height: calc(100vh - 60px);
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0 0.5rem;
   }
   
   .quick-payments-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
+    padding: 0 0.5rem;
   }
   
   .payment-type-tabs {
     flex-direction: column;
+    padding: 0 0.5rem;
   }
   
   .form-grid {
@@ -705,6 +716,14 @@
   
   .form-actions {
     flex-direction: column;
+  }
+  
+  .payment-form-section {
+    margin: 0 0.5rem 3rem 0.5rem;
+  }
+  
+  .recent-payments-section {
+    margin: 0 0.5rem;
   }
   
   .table-header,
@@ -748,7 +767,7 @@
   }
   
   .main-content {
-    margin-left: 220px;
+    
     width: calc(100vw - 220px);
     height: calc(100vh - 70px);
   }
@@ -765,7 +784,7 @@
   }
   
   .main-content {
-    margin-left: 250px;
+  
     padding: 2rem;
     width: calc(100vw - 250px);
     height: calc(100vh - 70px);
@@ -783,6 +802,8 @@
   
   .header-content {
     padding: 0 0.75rem;
+    max-width: 100%;
+    margin: 0 auto;
   }
   
   .header-content h1 {
@@ -796,8 +817,31 @@
   .main-content {
     margin-top: 50px;
     padding: 0.75rem;
-    width: 100vw;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     height: calc(100vh - 50px);
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0 0.25rem;
+  }
+  
+  .quick-payments-grid {
+    padding: 0 0.25rem;
+  }
+  
+  .payment-type-tabs {
+    padding: 0 0.25rem;
+  }
+  
+  .payment-form-section {
+    margin: 0 0.25rem 3rem 0.25rem;
+  }
+  
+  .recent-payments-section {
+    margin: 0 0.25rem;
   }
 }
 
