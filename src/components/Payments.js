@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Payments.css';
 
 function Payments({ currentUser, onLogout }) {
+  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedPaymentType, setSelectedPaymentType] = useState('bill');
   const [paymentForm, setPaymentForm] = useState({
     billType: 'elektrik',
@@ -25,6 +27,15 @@ function Payments({ currentUser, onLogout }) {
     { id: 3, name: 'Doğalgaz (İGDAŞ)', icon: '🔥', lastAmount: 220.30 },
     { id: 4, name: 'Telefon (Turkcell)', icon: '📱', lastAmount: 89.99 }
   ]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsSidebarOpen(false);
+  };
 
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
@@ -52,6 +63,56 @@ function Payments({ currentUser, onLogout }) {
 
   return (
     <div className="payments-container">
+      {/* Dropdown Menu Toggle Button */}
+      <div className="dropdown-menu-container">
+        <button 
+          className="dropdown-toggle-btn" 
+          onClick={toggleSidebar}
+          aria-label="Menüyü Aç/Kapat"
+        >
+          <span className="toggle-icon">
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </span>
+        </button>
+
+        {/* Dropdown Menu */}
+        {isSidebarOpen && (
+          <>
+            <div className="dropdown-menu">
+              <ul className="dropdown-menu-list">
+                <li>
+                  <button onClick={() => handleNavigation('/')} className="dropdown-link">
+                    <span className="nav-icon">🏠</span>
+                    Ana Sayfa
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/payments')} className="dropdown-link active">
+                    <span className="nav-icon">💳</span>
+                    Ödemeler
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/transfer')} className="dropdown-link">
+                    <span className="nav-icon">💸</span>
+                    Para Transferi
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/accounts')} className="dropdown-link">
+                    <span className="nav-icon">🏦</span>
+                    Hesaplarım
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div className="dropdown-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+          </>
+        )}
+      </div>
+
       <header className="main-header">
         <div className="header-content">
           <h1>Ödemeler</h1>
@@ -63,15 +124,6 @@ function Payments({ currentUser, onLogout }) {
       </header>
       
       <div className="main-layout">
-        <nav className="sidebar-nav">
-          <ul>
-            <li><Link to="/">Ana Sayfa</Link></li>
-            <li><Link to="/accounts">Hesaplarım</Link></li>
-            <li><Link to="/transfer">Para Transferi</Link></li>
-            <li><a href="#payments" className="active">Ödemeler</a></li>
-          </ul>
-        </nav>
-        
         <main className="main-content">
           <div className="container">
             <div className="page-header">

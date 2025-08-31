@@ -1,14 +1,14 @@
 .register-container {
-  min-height: 100vh;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--light-bg) 0%, rgba(245, 239, 231, 0.8) 100%);
   padding: 20px;
-  box-sizing: border-box;
 }
 
 .register-background {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--light-bg) 0%, rgba(245, 239, 231, 0.8) 100%);
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -21,13 +21,14 @@
 }
 
 .register-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--white);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 40px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 40px rgba(33, 53, 85, 0.2);
   width: 100%;
   max-width: 500px;
+  border: 3px solid var(--primary-dark);
   animation: slideUp 0.6s ease-out;
 }
 
@@ -50,7 +51,7 @@
 .bank-logo {
   font-size: 2.5rem;
   font-weight: bold;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -59,7 +60,7 @@
 }
 
 .register-subtitle {
-  color: #666;
+  color: var(--light-text);
   font-size: 1.1rem;
   margin: 0;
   font-weight: 500;
@@ -87,19 +88,21 @@
 .form-group input {
   width: 100%;
   padding: 15px 20px;
-  border: 2px solid #e1e5e9;
+  border: 2px solid var(--primary-dark);
   border-radius: 12px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: #fff;
+  background: var(--white);
+  color: var(--light-text);
   box-sizing: border-box;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--secondary-dark);
+  box-shadow: 0 0 0 3px rgba(62, 88, 121, 0.2);
   transform: translateY(-2px);
+  background-color: rgba(245, 239, 231, 0.1);
 }
 
 .form-group input:disabled {
@@ -137,8 +140,8 @@
 }
 
 .register-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
+  color: var(--white);
   border: none;
   padding: 15px 30px;
   border-radius: 12px;
@@ -148,11 +151,14 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .register-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
 
 .register-button:active:not(:disabled) {
@@ -167,8 +173,8 @@
 
 .back-button {
   background: transparent;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: var(--secondary-dark);
+  border: 2px solid var(--secondary-dark);
   padding: 12px 30px;
   border-radius: 12px;
   font-size: 1rem;
@@ -178,8 +184,8 @@
 }
 
 .back-button:hover:not(:disabled) {
-  background: #667eea;
-  color: white;
+  background: var(--secondary-dark);
+  color: var(--white);
   transform: translateY(-2px);
 }
 

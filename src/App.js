@@ -41,9 +41,13 @@ function App() {
     }
   };
 
-  const handleLogin = (username) => {
+  const onLogin = (username) => {
     setCurrentUser(username);
     setIsLoggedIn(true);
+    // Login başarılı olduktan sonra auth durumunu tekrar kontrol et
+    setTimeout(() => {
+      checkAuthStatus();
+    }, 100);
   };
 
   const handleLogout = async () => {
@@ -76,7 +80,7 @@ function App() {
     <div className="App">
       <Router>
         {!isLoggedIn ? (
-          <Login onLogin={handleLogin} />
+          <Login onLogin={onLogin} />
         ) : (
           <Routes>
             <Route path="/" element={<HomePage currentUser={currentUser} onLogout={handleLogout} />} />

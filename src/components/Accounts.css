@@ -27,7 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 40px;
 }
 
 .header-content h1 {
@@ -63,98 +63,152 @@
   display: flex;
   min-height: calc(100vh - 120px);
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 40px;
 }
 
-/* Sidebar Navigation */
-.sidebar-nav {
-  width: 250px;
-  min-width: 250px;
-  background: linear-gradient(180deg, #1B3C53 0%, #456882 100%);
-  padding: 1rem 0;
-  box-shadow: 2px 0 15px rgba(27, 60, 83, 0.2);
+/* Dropdown Menu Container */
+.dropdown-menu-container {
   position: fixed;
-  left: 0;
+  left: 30px;
+  top: 80px;
+  z-index: 1001;
+}
+
+.dropdown-toggle-btn {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 25px rgba(27, 60, 83, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 30px rgba(27, 60, 83, 0.6);
+}
+
+.toggle-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
   top: 70px;
-  bottom: 0;
-  height: calc(100vh - 70px);
-  z-index: 1000;
-  overflow-y: hidden;
-  transition: transform 0.3s ease;
+  left: 0;
+  width: 250px;
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: dropdownSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1002;
 }
 
-.sidebar-nav ul {
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-menu-list {
   list-style: none;
+  padding: 0.5rem 0;
   margin: 0;
-  padding: 0;
 }
 
-.sidebar-nav li {
-  margin-bottom: 0.25rem;
+.dropdown-menu-list li {
+  margin: 0;
 }
 
-.sidebar-nav a {
-  display: block;
+.dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
   color: white;
   text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  font-size: 0.9rem;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1.1rem;
+  cursor: pointer;
   transition: all 0.3s ease;
-  border-left: 3px solid transparent;
 }
 
-.sidebar-nav a:hover,
-.sidebar-nav a.active {
-  background: rgba(210, 193, 182, 0.2);
-  color: #D2C1B6;
-  border-left-color: #D2C1B6;
+.dropdown-link:hover {
+  background-color: rgba(210, 193, 182, 0.1);
   transform: translateX(5px);
 }
 
-/* Main Content with Sidebar Offset */
-.main-content {
-  flex: 1;
-  margin-left: 250px;
-  margin-top: 70px;
-  padding: 2rem;
-  background-color: #F9F3EF;
-  overflow-y: auto;
-  transition: margin-left 0.3s ease;
-  min-height: calc(100vh - 70px);
+.dropdown-link.active {
+  background-color: rgba(210, 193, 182, 0.15);
+  color: #D2C1B6;
 }
 
-/* Mobile Sidebar Toggle */
-.sidebar-toggle {
-  display: none;
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 1001;
-  background: #1B3C53;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
+.nav-icon {
+  font-size: 1.3rem;
+  width: 24px;
+  text-align: center;
 }
 
-.sidebar-overlay {
-  display: none;
+/* Dropdown Overlay */
+.dropdown-overlay {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 1000;
+  cursor: pointer;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-top: 70px;
+  padding: 2rem 40px;
+  background-color: #F9F3EF;
+  overflow-y: auto;
+  min-height: calc(100vh - 70px);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .main-header {
     padding: 0.75rem 0;
-    padding-left: 60px;
   }
   
   .header-content {
@@ -165,38 +219,84 @@
     font-size: 1.5rem;
   }
   
-  .sidebar-toggle {
-    display: block;
+  .dropdown-menu-container {
+    left: 20px;
   }
-  
-  .sidebar-nav {
-    transform: translateX(-100%);
-    top: 0;
-    height: 100vh;
-    width: 280px;
-    z-index: 1002;
+
+  .dropdown-toggle-btn {
+    width: 50px;
+    height: 50px;
   }
-  
-  .sidebar-nav.open {
-    transform: translateX(0);
+
+  .toggle-icon {
+    gap: 3px;
   }
-  
-  .sidebar-overlay.open {
-    display: block;
+
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+  }
+
+  .dropdown-menu {
+    width: 220px;
+    top: 60px;
+  }
+
+  .dropdown-link {
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .nav-icon {
+    font-size: 1.1rem;
   }
   
   .main-content {
-    margin-left: 0;
     margin-top: 60px;
     padding: 1rem;
+    min-height: calc(100vh - 60px);
   }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  .sidebar-nav {
-    width: 220px;
-    min-width: 220px;
+@media (max-width: 480px) {
+  .dropdown-menu-container {
+    left: 15px;
   }
+
+  .dropdown-toggle-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .toggle-icon {
+    gap: 2px;
+  }
+
+  .hamburger-line {
+    width: 18px;
+    height: 2px;
+  }
+
+  .dropdown-menu {
+    width: 200px;
+    top: 55px;
+  }
+
+  .dropdown-link {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .nav-icon {
+    font-size: 1rem;
+  }
+
+  .main-content {
+    margin-top: 50px;
+    padding: 0.75rem;
+    min-height: calc(100vh - 50px);
+  }
+}
   
   .main-content {
     margin-left: 220px;
@@ -205,7 +305,6 @@
   .header-content h1 {
     font-size: 1.75rem;
   }
-}
 
 @media (min-width: 1025px) {
   .sidebar-nav {
@@ -293,7 +392,7 @@
 .account-detail-card {
   background: linear-gradient(135deg, #EBF4F6 0%, rgba(55, 183, 195, 0.1) 100%);
   border-radius: 15px;
-  padding: 25px;
+  padding: 40px;
   box-shadow: 0 8px 25px rgba(7, 25, 82, 0.15);
   border: 1px solid rgba(55, 183, 195, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -546,7 +645,7 @@
 .card-visual {
   background: linear-gradient(135deg, #071952 0%, #088395 100%);
   color: white;
-  padding: 20px;
+  padding: 40px;
   border-radius: 12px;
   margin-bottom: 20px;
   min-height: 120px;

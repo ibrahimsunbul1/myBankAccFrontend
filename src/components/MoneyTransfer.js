@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './MoneyTransfer.css';
 
 function MoneyTransfer({ currentUser, onLogout }) {
+  const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [transferData, setTransferData] = useState({
     fromAccount: '',
     toAccount: '',
@@ -21,6 +23,15 @@ function MoneyTransfer({ currentUser, onLogout }) {
     { id: '1234567891', name: 'Vadeli Hesap', balance: 25000.00 },
     { id: '1234567892', name: 'Döviz Hesabı (USD)', balance: 2500.75 }
   ];
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsSidebarOpen(false);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -118,6 +129,56 @@ function MoneyTransfer({ currentUser, onLogout }) {
 
   return (
     <div className="transfer-container">
+      {/* Dropdown Menu Toggle Button */}
+      <div className="dropdown-menu-container">
+        <button 
+          className="dropdown-toggle-btn" 
+          onClick={toggleSidebar}
+          aria-label="Menüyü Aç/Kapat"
+        >
+          <span className="toggle-icon">
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+            <span className="hamburger-line"></span>
+          </span>
+        </button>
+
+        {/* Dropdown Menu */}
+        {isSidebarOpen && (
+          <>
+            <div className="dropdown-menu">
+              <ul className="dropdown-menu-list">
+                <li>
+                  <button onClick={() => handleNavigation('/')} className="dropdown-link">
+                    <span className="nav-icon">🏠</span>
+                    Ana Sayfa
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/payments')} className="dropdown-link">
+                    <span className="nav-icon">💳</span>
+                    Ödemeler
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/transfer')} className="dropdown-link active">
+                    <span className="nav-icon">💸</span>
+                    Para Transferi
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handleNavigation('/accounts')} className="dropdown-link">
+                    <span className="nav-icon">🏦</span>
+                    Hesaplarım
+                  </button>
+                </li>
+              </ul>
+            </div>
+            <div className="dropdown-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+          </>
+        )}
+      </div>
+
       <header className="main-header">
         <div className="header-content">
           <h1>Para Transferi</h1>
@@ -129,15 +190,6 @@ function MoneyTransfer({ currentUser, onLogout }) {
       </header>
       
       <div className="main-layout">
-        <nav className="sidebar-nav">
-          <ul>
-            <li><Link to="/">Ana Sayfa</Link></li>
-            <li><Link to="/accounts">Hesaplarım</Link></li>
-            <li><Link to="/transfer" className="active">Para Transferi</Link></li>
-            <li><Link to="/payments">Ödemeler</Link></li>
-          </ul>
-        </nav>
-        
         <main className="main-content">
           <div className="page-header">
             <h2>Güvenli ve Hızlı Para Transferi</h2>

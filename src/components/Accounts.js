@@ -1,8 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Accounts.css';
 
 function Accounts({ currentUser, onLogout }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    setIsSidebarOpen(false);
+  };
   const accounts = [
     {
       id: 1,
@@ -125,14 +136,54 @@ function Accounts({ currentUser, onLogout }) {
       </header>
       
       <div className="main-layout">
-        <nav className="sidebar-nav">
-          <ul>
-            <li><Link to="/">Ana Sayfa</Link></li>
-            <li><Link to="/accounts" className="active">Hesaplarım</Link></li>
-            <li><Link to="/transfer">Para Transferi</Link></li>
-            <li><Link to="/payments">Ödemeler</Link></li>
-          </ul>
-        </nav>
+        {/* Dropdown Menu */}
+        <div className="dropdown-menu-container">
+          <button 
+            className="dropdown-toggle-btn" 
+            onClick={toggleSidebar}
+            aria-label="Menüyü aç/kapat"
+          >
+            <div className="toggle-icon">
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </div>
+          </button>
+          
+          {isSidebarOpen && (
+            <>
+              <div className="dropdown-menu">
+                <ul className="dropdown-menu-list">
+                  <li>
+                    <button className="dropdown-link" onClick={() => handleNavigation('/')}>
+                      <span className="nav-icon">🏠</span>
+                      Ana Sayfa
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-link active">
+                      <span className="nav-icon">💳</span>
+                      Hesaplarım
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-link" onClick={() => handleNavigation('/transfer')}>
+                      <span className="nav-icon">💸</span>
+                      Para Transferi
+                    </button>
+                  </li>
+                  <li>
+                    <button className="dropdown-link" onClick={() => handleNavigation('/payments')}>
+                      <span className="nav-icon">💰</span>
+                      Ödemeler
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div className="dropdown-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+            </>
+          )}
+        </div>
         
         <main className="main-content">
         <div className="container">

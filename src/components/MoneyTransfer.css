@@ -1,4 +1,135 @@
 /* Money Transfer Page Styles */
+.transfer-container {
+  min-height: 100vh;
+  background-color: #F9F3EF;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Dropdown Menu Container */
+.dropdown-menu-container {
+  position: fixed;
+  left: 30px;
+  top: 80px;
+  z-index: 1001;
+}
+
+.dropdown-toggle-btn {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(27, 60, 83, 0.3);
+  transition: all 0.3s ease;
+}
+
+.dropdown-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(27, 60, 83, 0.4);
+}
+
+.toggle-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 3px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 250px;
+  background: linear-gradient(135deg, #1B3C53 0%, #456882 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  animation: dropdownSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1002;
+}
+
+@keyframes dropdownSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.dropdown-menu-list {
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+
+.dropdown-menu-list li {
+  margin: 0;
+}
+
+.dropdown-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dropdown-link:hover {
+  background-color: rgba(210, 193, 182, 0.1);
+  transform: translateX(5px);
+}
+
+.dropdown-link.active {
+  background-color: rgba(210, 193, 182, 0.15);
+  color: #D2C1B6;
+}
+
+.nav-icon {
+  font-size: 1.3rem;
+  width: 24px;
+  text-align: center;
+}
+
+/* Dropdown Overlay */
+.dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 1000;
+  cursor: pointer;
+}
+
 .transfer-page {
   min-height: 100vh;
   height: 100vh;
@@ -29,7 +160,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
+  padding: 0 40px;
 }
 
 .header-content h1 {
@@ -65,9 +196,88 @@
   display: flex;
   min-height: calc(100vh - 120px);
   position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 40px;
 }
 
-/* Sidebar Navigation */
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dropdown-menu-container {
+    left: 20px;
+  }
+
+  .dropdown-toggle-btn {
+    width: 50px;
+    height: 50px;
+  }
+
+  .toggle-icon {
+    gap: 3px;
+  }
+
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+  }
+
+  .dropdown-menu {
+    width: 220px;
+    top: 60px;
+  }
+
+  .dropdown-link {
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .nav-icon {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dropdown-menu-container {
+    left: 15px;
+  }
+
+  .dropdown-toggle-btn {
+    width: 45px;
+    height: 45px;
+  }
+
+  .toggle-icon {
+    gap: 2px;
+  }
+
+  .hamburger-line {
+    width: 18px;
+    height: 2px;
+  }
+
+  .dropdown-menu {
+    width: 200px;
+    top: 55px;
+  }
+
+  .dropdown-link {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .nav-icon {
+    font-size: 1rem;
+  }
+
+  .main-content {
+    margin-top: 50px;
+    padding: 0.75rem;
+    min-height: calc(100vh - 50px);
+  }
+}
+
+/* Old Sidebar Navigation (keeping for compatibility) */
 .sidebar-nav {
   width: 250px;
   min-width: 250px;
@@ -116,13 +326,14 @@
 /* Main Content with Sidebar Offset */
 .main-content {
   flex: 1;
-  margin-left: 250px;
   margin-top: 70px;
   padding: 2rem;
   background-color: #F9F3EF;
   overflow-y: auto;
-  transition: margin-left 0.3s ease;
   min-height: calc(100vh - 70px);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Mobile Sidebar Toggle */
@@ -188,9 +399,9 @@
   }
   
   .main-content {
-    margin-left: 0;
     margin-top: 60px;
     padding: 1rem;
+    min-height: calc(100vh - 60px);
   }
 }
 
@@ -290,7 +501,7 @@
 
 /* Transfer Container */
 .transfer-container {
-  background-color: white;
+  background-color: var(--light-bg);
   border-radius: 15px;
   box-shadow: 0 8px 25px rgba(27, 60, 83, 0.15);
   width: 100%;
@@ -317,7 +528,7 @@
 }
 
 .type-btn {
-  background: white;
+  background: var(--light-bg);
   border: 2px solid rgba(55, 183, 195, 0.3);
   border-radius: 12px;
   padding: 20px;
@@ -383,7 +594,7 @@
   border-radius: 10px;
   font-size: 16px;
   transition: all 0.3s ease;
-  background-color: white;
+  background-color: var(--light-bg);
   font-family: inherit;
 }
 
@@ -417,7 +628,7 @@
 .transfer-summary {
   background: rgba(210, 193, 182, 0.1);
   border-radius: 10px;
-  padding: 20px;
+  padding: 40px;
   margin-top: 20px;
   border: 1px solid rgba(210, 193, 182, 0.2);
 }

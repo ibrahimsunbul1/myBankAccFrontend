@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage({ currentUser, onLogout }) {
-  const [accounts, setAccounts] = useState([]);
   const [totalBalance, setTotalBalance] = useState(0);
   const [availableBalance, setAvailableBalance] = useState(0);
   const [fixedDeposit, setFixedDeposit] = useState(0);
-  const [recentTransactions, setRecentTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
 
   useEffect(() => {
     fetchUserData();
@@ -19,21 +24,7 @@ function HomePage({ currentUser, onLogout }) {
     try {
       setLoading(true);
       
-      // Önce kullanıcının oturum açıp açmadığını kontrol et
-      const authResponse = await fetch('http://localhost:8080/api/auth/me', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (!authResponse.ok) {
-        setError('Oturum açmanız gerekiyor');
-        return;
-      }
-
-      // Kullanıcı hesaplarını çek
+      // Kullanıcı hesaplarını çek (auth kontrolü App.js'te yapılıyor)
       const accountsResponse = await fetch('http://localhost:8080/api/accounts', {
         method: 'GET',
         credentials: 'include',
@@ -44,7 +35,6 @@ function HomePage({ currentUser, onLogout }) {
 
       if (accountsResponse.ok) {
         const accountsData = await accountsResponse.json();
-        setAccounts(accountsData);
         
         // Toplam bakiye hesapla
         let total = 0;
@@ -101,15 +91,59 @@ function HomePage({ currentUser, onLogout }) {
       </header>
       
       <div className="main-layout">
-        <nav className="sidebar-nav">
-          <ul>
-            <li><Link to="/" className="active">Ana Sayfa</Link></li>
-            <li><Link to="/accounts">Hesaplarım</Link></li>
-            <li><Link to="/transfer">Para Transferi</Link></li>
-            <li><Link to="/payments">Ödemeler</Link></li>
-          </ul>
-        </nav>
-        
+
+
+
+
+
+
+        {/* Dropdown Menu Toggle Button */}
+        <div className="dropdown-menu-container">
+          <button 
+            className="dropdown-toggle-btn" 
+            onClick={toggleSidebar}
+            aria-label="Menüyü Aç/Kapat"
+          >
+            <span className="toggle-icon">
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+            </span>
+          </button>
+
+          {/* Dropdown Menu */}
+          {isSidebarOpen && (
+            <div className="dropdown-menu">
+              <ul className="dropdown-menu-list">
+                <li>
+                  <button onClick={() => { navigate('/'); setIsSidebarOpen(false); }} className="dropdown-link">
+                    <span className="nav-icon">🏠</span>
+                    Ana Sayfa
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { navigate('/payments'); setIsSidebarOpen(false); }} className="dropdown-link">
+                    <span className="nav-icon">💳</span>
+                    Ödemeler
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { navigate('/transfer'); setIsSidebarOpen(false); }} className="dropdown-link">
+                    <span className="nav-icon">💸</span>
+                    Para Transferi
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => { navigate('/accounts'); setIsSidebarOpen(false); }} className="dropdown-link">
+                    <span className="nav-icon">🏦</span>
+                    Hesaplarım
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+
         <main className="main-content">
           {/* Hero Section */}
           <section className="hero-section">
