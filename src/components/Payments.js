@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Payments.css';
+import { useUser } from '../context/UserContext';
+import { paymentAPI } from '../services/api';
 
 function Payments({ currentUser, onLogout }) {
   const navigate = useNavigate();
+  const { user, updateBalance } = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedPaymentType, setSelectedPaymentType] = useState('bill');
   const [paymentForm, setPaymentForm] = useState({
@@ -12,21 +15,51 @@ function Payments({ currentUser, onLogout }) {
     amount: '',
     description: ''
   });
+  const [recentPayments, setRecentPayments] = useState([]);
+  const [quickPayments, setQuickPayments] = useState([]);
 
-  const [recentPayments] = useState([
-    { id: 1, date: '2024-01-15', type: 'Elektrik Faturası', amount: 180.50, status: 'Tamamlandı' },
-    { id: 2, date: '2024-01-10', type: 'Su Faturası', amount: 95.75, status: 'Tamamlandı' },
-    { id: 3, date: '2024-01-08', type: 'Doğalgaz Faturası', amount: 220.30, status: 'Tamamlandı' },
-    { id: 4, date: '2024-01-05', type: 'Telefon Faturası', amount: 89.99, status: 'Tamamlandı' },
-    { id: 5, date: '2024-01-03', type: 'İnternet Faturası', amount: 79.90, status: 'Tamamlandı' }
-  ]);
 
-  const [quickPayments] = useState([
-    { id: 1, name: 'Elektrik (TEDAŞ)', icon: '⚡', lastAmount: 180.50 },
-    { id: 2, name: 'Su (İSKİ)', icon: '💧', lastAmount: 95.75 },
-    { id: 3, name: 'Doğalgaz (İGDAŞ)', icon: '🔥', lastAmount: 220.30 },
-    { id: 4, name: 'Telefon (Turkcell)', icon: '📱', lastAmount: 89.99 }
-  ]);
+
+  const fetchPaymentData = useCallback(async () => {
+    const defaultRecentPayments = [
+      { id: 1, date: '2024-01-15', type: 'Elektrik Faturası', amount: 180.50, status: 'Tamamlandı' },
+      { id: 2, date: '2024-01-10', type: 'Su Faturası', amount: 95.75, status: 'Tamamlandı' },
+      { id: 3, date: '2024-01-08', type: 'Doğalgaz Faturası', amount: 220.30, status: 'Tamamlandı' },
+      { id: 4, date: '2024-01-05', type: 'Telefon Faturası', amount: 89.99, status: 'Tamamlandı' },
+      { id: 5, date: '2024-01-03', type: 'İnternet Faturası', amount: 79.90, status: 'Tamamlandı' }
+    ];
+
+    const defaultQuickPayments = [
+      { id: 1, name: 'Elektrik (TEDAŞ)', icon: '⚡', lastAmount: 180.50 },
+      { id: 2, name: 'Su (İSKİ)', icon: '💧', lastAmount: 95.75 },
+      { id: 3, name: 'Doğalgaz (İGDAŞ)', icon: '🔥', lastAmount: 220.30 },
+      { id: 4, name: 'Telefon (Turkcell)', icon: '📱', lastAmount: 89.99 }
+    ];
+
+    try {
+      // Son ödemeleri çek
+      const paymentsResponse = await paymentAPI.getPaymentHistory(5);
+      if (paymentsResponse && paymentsResponse.success) {
+        setRecentPayments(paymentsResponse.payments || defaultRecentPayments);
+      } else {
+        setRecentPayments(defaultRecentPayments);
+      }
+      
+    } catch (error) {
+      console.log('Payment API hatası, placeholder veriler kullanılıyor:', error);
+      setRecentPayments(defaultRecentPayments);
+    }
+    
+    // Backend'te getQuickPayments endpoint'i olmadığı için placeholder veri kullan
+    setQuickPayments(defaultQuickPayments);
+  }, []);
+
+  useEffect(() => {
+    // Sadece kullanıcı authenticated ise API çağrısı yap
+    if (user && user.id) {
+      fetchPaymentData();
+    }
+  }, [user, fetchPaymentData]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -37,16 +70,47 @@ function Payments({ currentUser, onLogout }) {
     setIsSidebarOpen(false);
   };
 
-  const handlePaymentSubmit = (e) => {
+  const handlePaymentSubmit = async (e) => {
     e.preventDefault();
-    // Ödeme işlemi simülasyonu
-    alert('Ödeme işlemi başarıyla tamamlandı!');
-    setPaymentForm({
-      billType: 'elektrik',
-      subscriberNumber: '',
-      amount: '',
-      description: ''
-    });
+    
+    try {
+      const paymentData = {
+        type: selectedPaymentType,
+        billType: paymentForm.billType,
+        subscriberNumber: paymentForm.subscriberNumber,
+        amount: parseFloat(paymentForm.amount),
+        description: paymentForm.description || `${paymentForm.billType} fatura ödemesi`
+      };
+      
+      const response = await paymentAPI.createPayment(paymentData);
+      
+      if (response && response.success) {
+        alert('Ödeme işlemi başarıyla tamamlandı!');
+        
+        // Formu temizle
+        setPaymentForm({
+          billType: 'elektrik',
+          subscriberNumber: '',
+          amount: '',
+          description: ''
+        });
+        
+        // Son ödemeleri yenile
+        await fetchPaymentData();
+        
+        // Bakiyeyi güncelle (eğer response'da yeni bakiye varsa)
+        if (response.newBalance !== undefined) {
+          updateBalance(response.newBalance);
+        }
+      } else {
+        const errorMessage = response?.message || 'Ödeme işlemi başarısız oldu.';
+        alert(errorMessage);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      const errorMessage = error.message || 'Ödeme işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+      alert(errorMessage);
+    }
   };
 
   const handleQuickPayment = (payment) => {

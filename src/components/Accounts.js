@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Accounts.css';
+import { useUser } from '../context/UserContext';
+import { userAPI } from '../services/api';
 
 function Accounts({ currentUser, onLogout }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, accounts } = useUser();
+  const [userCards, setUserCards] = useState([]);
+  const [transactions, setTransactions] = useState([]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -14,7 +19,8 @@ function Accounts({ currentUser, onLogout }) {
     navigate(path);
     setIsSidebarOpen(false);
   };
-  const accounts = [
+  // Placeholder hesaplar (API yoksa kullanılacak)
+  const defaultAccounts = [
     {
       id: 1,
       type: 'Vadesiz Hesap',
@@ -50,30 +56,57 @@ function Accounts({ currentUser, onLogout }) {
     }
   ];
 
-  const [userCards, setUserCards] = React.useState([
-    {
-      id: 1,
-      cardNumber: '**** **** **** 1234',
-      cardType: 'Kredi Kartı',
-      bankName: 'Ziraat Bankası',
-      expiryDate: '12/26',
-      cardHolder: 'AHMET YILMAZ',
-      limit: 15000,
-      availableLimit: 12500
-    },
-    {
-      id: 2,
-      cardNumber: '**** **** **** 5678',
-      cardType: 'Banka Kartı',
-      bankName: 'Ziraat Bankası',
-      expiryDate: '08/27',
-      cardHolder: 'AHMET YILMAZ',
-      limit: null,
-      availableLimit: null
-    }
-  ]);
+  // Context'ten gelen hesapları kullan, yoksa placeholder'ları kullan
+  const userAccounts = accounts && accounts.length > 0 ? accounts : defaultAccounts;
 
-  const [newCard, setNewCard] = React.useState({
+  useEffect(() => {
+    // Sadece kullanıcı authenticated ise API çağrısı yap
+    if (user && user.id) {
+      fetchAccountData();
+    }
+  }, [user]);
+
+  const fetchAccountData = async () => {
+    // Backend'te getUserCards ve getTransactionHistory endpoint'leri olmadığı için placeholder veri kullan
+    
+    // Placeholder kartlar
+    setUserCards([
+      {
+        id: 1,
+        cardNumber: '**** **** **** 1234',
+        cardType: 'Kredi Kartı',
+        bankName: 'Ziraat Bankası',
+        expiryDate: '12/26',
+        cardHolder: 'AHMET YILMAZ',
+        limit: 15000,
+        availableLimit: 12500
+      },
+      {
+        id: 2,
+        cardNumber: '**** **** **** 5678',
+        cardType: 'Banka Kartı',
+        bankName: 'Ziraat Bankası',
+        expiryDate: '08/27',
+        cardHolder: 'AHMET YILMAZ',
+        limit: null,
+        availableLimit: null
+      }
+    ]);
+
+    // Placeholder işlemler
+    setTransactions([
+          { id: 1, date: '2024-01-15', description: 'Maaş Ödemesi', amount: 8500, type: 'credit', accountId: 1, category: 'Gelir' },
+          { id: 2, date: '2024-01-14', description: 'Market Alışverişi', amount: -250.75, type: 'debit', accountId: 1, category: 'Alışveriş' },
+          { id: 3, date: '2024-01-13', description: 'Elektrik Faturası', amount: -180.50, type: 'debit', accountId: 1, category: 'Fatura' },
+          { id: 4, date: '2024-01-12', description: 'ATM Para Çekme', amount: -500, type: 'debit', accountId: 1, category: 'Nakit' },
+          { id: 5, date: '2024-01-11', description: 'Vadeli Hesap Faizi', amount: 125.30, type: 'credit', accountId: 2, category: 'Faiz' },
+          { id: 6, date: '2024-01-10', description: 'Online Alışveriş', amount: -89.99, type: 'debit', accountId: 1, category: 'Alışveriş' },
+          { id: 7, date: '2024-01-09', description: 'Restoran Ödemesi', amount: -125.50, type: 'debit', accountId: 1, category: 'Yemek' },
+          { id: 8, date: '2024-01-08', description: 'Benzin', amount: -200.00, type: 'debit', accountId: 1, category: 'Ulaşım' }
+        ]);
+  };
+
+  const [newCard, setNewCard] = useState({
     cardNumber: '',
     cardType: 'Kredi Kartı',
     bankName: '',
@@ -83,44 +116,98 @@ function Accounts({ currentUser, onLogout }) {
     availableLimit: ''
   });
 
-  const [showAddCard, setShowAddCard] = React.useState(false);
+  const [showAddCard, setShowAddCard] = useState(false);
 
-  const transactions = [
-    { id: 1, date: '2024-01-15', description: 'Maaş Ödemesi', amount: 8500, type: 'credit', accountId: 1, category: 'Gelir' },
-    { id: 2, date: '2024-01-14', description: 'Market Alışverişi', amount: -250.75, type: 'debit', accountId: 1, category: 'Alışveriş' },
-    { id: 3, date: '2024-01-13', description: 'Elektrik Faturası', amount: -180.50, type: 'debit', accountId: 1, category: 'Fatura' },
-    { id: 4, date: '2024-01-12', description: 'ATM Para Çekme', amount: -500, type: 'debit', accountId: 1, category: 'Nakit' },
-    { id: 5, date: '2024-01-11', description: 'Vadeli Hesap Faizi', amount: 125.30, type: 'credit', accountId: 2, category: 'Faiz' },
-    { id: 6, date: '2024-01-10', description: 'Online Alışveriş', amount: -89.99, type: 'debit', accountId: 1, category: 'Alışveriş' },
-    { id: 7, date: '2024-01-09', description: 'Restoran Ödemesi', amount: -125.50, type: 'debit', accountId: 1, category: 'Yemek' },
-    { id: 8, date: '2024-01-08', description: 'Benzin', amount: -200.00, type: 'debit', accountId: 1, category: 'Ulaşım' }
-  ];
-
-  const handleAddCard = () => {
+  const handleAddCard = async () => {
     if (newCard.cardNumber && newCard.bankName && newCard.expiryDate && newCard.cardHolder) {
-      const cardToAdd = {
-        id: userCards.length + 1,
-        ...newCard,
-        cardNumber: `**** **** **** ${newCard.cardNumber.slice(-4)}`,
-        limit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.limit) || 0 : null,
-        availableLimit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.availableLimit) || 0 : null
-      };
-      setUserCards([...userCards, cardToAdd]);
-      setNewCard({
-        cardNumber: '',
-        cardType: 'Kredi Kartı',
-        bankName: '',
-        expiryDate: '',
-        cardHolder: '',
-        limit: '',
-        availableLimit: ''
-      });
-      setShowAddCard(false);
+      try {
+        const cardData = {
+          cardNumber: newCard.cardNumber,
+          cardType: newCard.cardType,
+          bankName: newCard.bankName,
+          expiryDate: newCard.expiryDate,
+          cardHolder: newCard.cardHolder,
+          limit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.limit) || 0 : null,
+          availableLimit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.availableLimit) || 0 : null
+        };
+        
+        const response = await userAPI.addUserCard(cardData);
+        
+        if (response && response.success) {
+          // API'den dönen kart bilgisini listeye ekle
+          setUserCards([...userCards, response.card]);
+          alert('Kart başarıyla eklendi!');
+        } else {
+          // API başarısız olursa local olarak ekle
+          const cardToAdd = {
+            id: userCards.length + 1,
+            ...newCard,
+            cardNumber: `**** **** **** ${newCard.cardNumber.slice(-4)}`,
+            limit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.limit) || 0 : null,
+            availableLimit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.availableLimit) || 0 : null
+          };
+          setUserCards([...userCards, cardToAdd]);
+          const errorMessage = response?.message || 'Kart eklenirken bir hata oluştu.';
+          alert(errorMessage);
+        }
+        
+        setNewCard({
+          cardNumber: '',
+          cardType: 'Kredi Kartı',
+          bankName: '',
+          expiryDate: '',
+          cardHolder: '',
+          limit: '',
+          availableLimit: ''
+        });
+        setShowAddCard(false);
+      } catch (error) {
+        console.error('Kart ekleme hatası:', error);
+        // Hata durumunda local olarak ekle
+        const cardToAdd = {
+          id: userCards.length + 1,
+          ...newCard,
+          cardNumber: `**** **** **** ${newCard.cardNumber.slice(-4)}`,
+          limit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.limit) || 0 : null,
+          availableLimit: newCard.cardType === 'Kredi Kartı' ? parseFloat(newCard.availableLimit) || 0 : null
+        };
+        setUserCards([...userCards, cardToAdd]);
+        const errorMessage = error.message || 'Kart geçici olarak eklendi (API bağlantısı yok)';
+        alert(errorMessage);
+        setNewCard({
+          cardNumber: '',
+          cardType: 'Kredi Kartı',
+          bankName: '',
+          expiryDate: '',
+          cardHolder: '',
+          limit: '',
+          availableLimit: ''
+        });
+        setShowAddCard(false);
+      }
     }
   };
 
-  const handleDeleteCard = (cardId) => {
-    setUserCards(userCards.filter(card => card.id !== cardId));
+  const handleDeleteCard = async (cardId) => {
+    try {
+      const response = await userAPI.deleteUserCard(cardId);
+      
+      if (response && response.success) {
+        setUserCards(userCards.filter(card => card.id !== cardId));
+        alert('Kart başarıyla silindi!');
+      } else {
+        // API başarısız olursa local olarak sil
+        setUserCards(userCards.filter(card => card.id !== cardId));
+        const errorMessage = response?.message || 'Kart silinirken bir hata oluştu.';
+        alert(errorMessage);
+      }
+    } catch (error) {
+      console.error('Kart silme hatası:', error);
+      // Hata durumunda local olarak sil
+      setUserCards(userCards.filter(card => card.id !== cardId));
+      const errorMessage = error.message || 'Kart geçici olarak silindi (API bağlantısı yok)';
+      alert(errorMessage);
+    }
   };
 
   return (
@@ -194,7 +281,7 @@ function Accounts({ currentUser, onLogout }) {
 
           {/* Accounts Grid */}
           <div className="accounts-grid">
-            {accounts.map(account => (
+            {userAccounts.map(account => (
               <div key={account.id} className="account-detail-card">
                 <div className="account-header">
                   <h3>{account.type}</h3>

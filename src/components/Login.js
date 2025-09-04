@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import Register from './Register';
+import { useUser } from '../context/UserContext';
 
-function Login({ onLogin }) {
+function Login() {
+  const { login, error: contextError, loading: contextLoading, clearError } = useUser();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [localError, setLocalError] = useState('');
+  
+  // Context'ten gelen error'ı kullan, yoksa local error'ı kullan
+  const error = contextError || localError;
+  const isLoading = contextLoading;
+
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,7 +28,10 @@ function Login({ onLogin }) {
     }));
     
     // Clear error when user starts typing
-    if (error) setError('');
+    if (error) {
+      setLocalError('');
+      clearError();
+    }
   };
   
   const validateTcOrCustomerNumber = (input) => {
@@ -46,49 +58,27 @@ function Login({ onLogin }) {
     
     // Basic validation
     if (!formData.username || !formData.password) {
-      setError('Lütfen tüm alanları doldurun');
+      setLocalError('Lütfen tüm alanları doldurun');
       return;
     }
     
     // Validate input format
     if (!validateTcOrCustomerNumber(formData.username)) {
-      setError('Kullanıcı adı en az 3 karakter olmalı veya TC/Müşteri numarası 11 haneli olmalı ve 0 ile başlamamalıdır');
+      setLocalError('Kullanıcı adı en az 3 karakter olmalı veya TC/Müşteri numarası 11 haneli olmalı ve 0 ile başlamamalıdır');
       return;
     }
 
-    setIsLoading(true);
+    // Context'teki login fonksiyonunu kullan
+    const result = await login({
+      username: formData.username,
+      password: formData.password
+    });
     
-    try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (response.ok) {
-        // Login successful - sadece onLogin çağır, diğer işlemler App.js'te yapılacak
-        const fullName = data.firstName && data.lastName ? 
-          data.firstName + ' ' + data.lastName : 
-          data.username;
-        onLogin(fullName);
-        return; // Başarılı login sonrası hemen çık
-      } else {
-        // Login failed
-        setError(data.error || 'Kullanıcı adı veya şifre hatalı');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError('Bağlantı hatası. Lütfen tekrar deneyin.');
-    } finally {
-      setIsLoading(false);
+    if (result && result.success) {
+      // Login başarılı, doğrudan yönlendir
+      navigate('/', { replace: true });
+    } else {
+      setLocalError(result?.error || 'Kullanıcı adı veya şifre hatalı');
     }
   };
   
@@ -100,7 +90,8 @@ function Login({ onLogin }) {
 
   const handleBackToLogin = () => {
     setShowRegisterPage(false);
-    setError('');
+    setLocalError('');
+    clearError();
   };
 
   if (showRegisterPage) {

@@ -1,0 +1,203 @@
+/* Finansal Grafik Bileşeni Stilleri */
+.financial-chart-container {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(33, 53, 85, 0.15);
+  border: 2px solid var(--secondary-dark);
+  margin: 2rem 0;
+  transition: all 0.3s ease;
+}
+
+.financial-chart-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(33, 53, 85, 0.25);
+  border-color: var(--primary-dark);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.chart-header h3 {
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(33, 53, 85, 0.1);
+}
+
+.chart-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(33, 53, 85, 0.1);
+  border-radius: 10px;
+  padding: 0.25rem;
+}
+
+.chart-tab {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--primary-dark);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chart-tab:hover {
+  background: rgba(33, 53, 85, 0.1);
+  transform: translateY(-1px);
+}
+
+.chart-tab.active {
+  background: var(--primary-dark);
+  color: var(--text-color);
+  box-shadow: 0 4px 15px rgba(33, 53, 85, 0.3);
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+
+.chart-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(33, 53, 85, 0.1);
+  border-left: 4px solid var(--primary-dark);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.chart-loading p {
+  color: var(--primary-dark);
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .financial-chart-container {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  
+  .chart-header h3 {
+    font-size: 1.3rem;
+  }
+  
+  .chart-tabs {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .chart-tab {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+  }
+  
+  .chart-wrapper {
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .financial-chart-container {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .chart-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .chart-tabs {
+    flex-direction: column;
+  }
+  
+  .chart-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+  
+  .chart-wrapper {
+    height: 250px;
+  }
+  
+  .chart-loading {
+    height: 200px;
+  }
+  
+  .loading-spinner {
+    width: 30px;
+    height: 30px;
+    border-width: 3px;
+  }
+}
+
+/* Grafik hover efektleri */
+.financial-chart-container canvas {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.financial-chart-container:hover canvas {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode desteği (gelecekte kullanılabilir) */
+@media (prefers-color-scheme: dark) {
+  .financial-chart-container {
+    background: #1f2937;
+    border-color: #374151;
+  }
+  
+  .chart-header h3 {
+    color: #f9fafb;
+  }
+  
+  .chart-tab {
+    color: #d1d5db;
+  }
+  
+  .chart-tab.active {
+    background: #374151;
+    color: #f9fafb;
+  }
+  
+  .chart-loading p {
+    color: #d1d5db;
+  }
+}

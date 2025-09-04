@@ -1,13 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
+import { useUser } from '../context/UserContext';
+import { getAllFinancialData, formatNumber } from '../services/financialService';
+import FinancialChart from './FinancialChart';
+// API imports removed as they are not used
 
 function HomePage({ currentUser, onLogout }) {
-  const [totalBalance, setTotalBalance] = useState(0);
-  const [availableBalance, setAvailableBalance] = useState(0);
-  const [fixedDeposit, setFixedDeposit] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user, balance, accounts, loading: userLoading } = useUser();
+  const [dashboardData, setDashboardData] = useState({
+    totalBalance: 0,
+    availableBalance: 0,
+    fixedDeposit: 0,
+    recentActivity: []
+  });
+  const [financialData, setFinancialData] = useState({
+    exchangeRates: { usdToTry: 0, eurToTry: 0 },
+    goldPrices: { goldPerOunce: 0, goldPerGram: 0 },
+    bistData: { value: 0, change: 0, changePercent: 0 }
+  });
+  // Removed static loading state - using only userLoading from context
+  const [error] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -16,53 +29,51 @@ function HomePage({ currentUser, onLogout }) {
   };
 
 
-  useEffect(() => {
-    fetchUserData();
+  const fetchDashboardData = useCallback(async () => {
+    // Backend'te dashboard endpoint'i olmadığı için context'ten veri hesapla
+    const calculatedData = {
+      totalBalance: balance || 0,
+      accountCount: accounts ? accounts.length : 0,
+      recentTransactions: [
+        { id: 1, description: 'Market Alışverişi', amount: -125.50, date: '2024-01-15' },
+        { id: 2, description: 'Maaş Yatırımı', amount: 5000.00, date: '2024-01-14' },
+        { id: 3, description: 'Elektrik Faturası', amount: -180.75, date: '2024-01-13' }
+      ],
+      monthlySpending: 1250.75,
+      monthlyIncome: 5000.00
+    };
+    setDashboardData(calculatedData);
+  }, [balance, accounts]);
+
+  const fetchFinancialData = useCallback(async () => {
+    try {
+      const data = await getAllFinancialData();
+      setFinancialData(data);
+    } catch (error) {
+      console.error('Finansal veriler yüklenirken hata:', error);
+    }
   }, []);
 
-  const fetchUserData = async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    if (user && user.id) {
+      fetchDashboardData();
+      fetchFinancialData();
       
-      // Kullanıcı hesaplarını çek (auth kontrolü App.js'te yapılıyor)
-      const accountsResponse = await fetch('http://localhost:8080/api/accounts', {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (accountsResponse.ok) {
-        const accountsData = await accountsResponse.json();
-        
-        // Toplam bakiye hesapla
-        let total = 0;
-        let available = 0;
-        let fixed = 0;
-        
-        accountsData.forEach(account => {
-          total += parseFloat(account.balance || 0);
-          if (account.accountType === 'SAVINGS') {
-            available += parseFloat(account.balance || 0);
-          } else if (account.accountType === 'FIXED_DEPOSIT') {
-            fixed += parseFloat(account.balance || 0);
-          }
-        });
-        
-        setTotalBalance(total);
-        setAvailableBalance(available);
-        setFixedDeposit(fixed);
-      }
-    } catch (err) {
-      setError('Veriler yüklenirken hata oluştu');
-      console.error('Error fetching user data:', err);
-    } finally {
-      setLoading(false);
+      // Finansal verileri her 5 dakikada bir güncelle
+      const financialInterval = setInterval(() => {
+        fetchFinancialData();
+      }, 5 * 60 * 1000); // 5 dakika
+      
+      // Cleanup function
+      return () => {
+        clearInterval(financialInterval);
+      };
     }
-  };
+  }, [user, balance, accounts, fetchDashboardData, fetchFinancialData]);
 
-  if (loading) {
+
+
+  if (userLoading) {
     return (
       <div className="home-container">
         <div className="loading">Yükleniyor...</div>
@@ -151,6 +162,45 @@ function HomePage({ currentUser, onLogout }) {
               <h1>Hoş Geldiniz, {currentUser}</h1>
               <p>Bankacılık işlemlerinizi güvenle gerçekleştirin</p>
             </div>
+            
+            {/* Finansal Veriler */}
+            <div className="financial-data-cards">
+              <div className="financial-card">
+                <div className="financial-icon">💵</div>
+                <div className="financial-info">
+                  <h4>USD/TRY</h4>
+                  <div className="financial-value">{formatNumber(financialData.exchangeRates.usdToTry)}</div>
+                </div>
+              </div>
+              
+              <div className="financial-card">
+                <div className="financial-icon">💶</div>
+                <div className="financial-info">
+                  <h4>EUR/TRY</h4>
+                  <div className="financial-value">{formatNumber(financialData.exchangeRates.eurToTry)}</div>
+                </div>
+              </div>
+              
+              <div className="financial-card">
+                <div className="financial-icon">🥇</div>
+                <div className="financial-info">
+                  <h4>Altın (Ons)</h4>
+                  <div className="financial-value">${formatNumber(financialData.goldPrices.goldPerOunce)}</div>
+                </div>
+              </div>
+              
+              <div className="financial-card">
+                <div className="financial-icon">📈</div>
+                <div className="financial-info">
+                  <h4>BIST 100</h4>
+                  <div className="financial-value">{formatNumber(financialData.bistData.value)}</div>
+                  <div className={`financial-change ${financialData.bistData.change >= 0 ? 'positive' : 'negative'}`}>
+                    {financialData.bistData.change >= 0 ? '+' : ''}{formatNumber(financialData.bistData.change)} 
+                    ({financialData.bistData.changePercent >= 0 ? '+' : ''}{formatNumber(financialData.bistData.changePercent)}%)
+                  </div>
+                </div>
+              </div>
+            </div>
           </section>
 
           {/* Account Summary */}
@@ -161,23 +211,28 @@ function HomePage({ currentUser, onLogout }) {
                 <div className="card-header">
                   <h3>Toplam Bakiye</h3>
                 </div>
-                <div className="card-amount">₺{totalBalance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div className="card-amount">₺{(dashboardData.totalBalance || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
               
               <div className="summary-card">
                 <div className="card-header">
                   <h3>Kullanılabilir Bakiye</h3>
                 </div>
-                <div className="card-amount">₺{availableBalance.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div className="card-amount">₺{(dashboardData.availableBalance || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
               
               <div className="summary-card">
                 <div className="card-header">
                   <h3>Vadeli Hesap</h3>
                 </div>
-                <div className="card-amount">₺{fixedDeposit.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div className="card-amount">₺{(dashboardData.fixedDeposit || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
               </div>
             </div>
+          </section>
+
+          {/* Finansal Piyasa Grafikleri */}
+          <section className="financial-charts-section">
+            <FinancialChart />
           </section>
 
           {/* Services Grid */}

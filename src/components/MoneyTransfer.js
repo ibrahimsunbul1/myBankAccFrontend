@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './MoneyTransfer.css';
+import { useUser } from '../context/UserContext';
+import { transferAPI } from '../services/api';
 
 function MoneyTransfer({ currentUser, onLogout }) {
   const navigate = useNavigate();
+  const { user, accounts, updateBalance } = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [transferData, setTransferData] = useState({
     fromAccount: '',
@@ -18,11 +21,22 @@ function MoneyTransfer({ currentUser, onLogout }) {
   const [isLoading, setIsLoading] = useState(false);
   const [transferSuccess, setTransferSuccess] = useState(false);
 
-  const userAccounts = [
-    { id: '1234567890', name: 'Vadesiz Hesap', balance: 15750.50 },
-    { id: '1234567891', name: 'Vadeli Hesap', balance: 25000.00 },
-    { id: '1234567892', name: 'Döviz Hesabı (USD)', balance: 2500.75 }
+
+  // Placeholder hesaplar (API yoksa kullanılacak)
+  const defaultUserAccounts = [
+    { id: '1234567890', name: 'Vadesiz Hesap', balance: 15750.50, accountType: 'SAVINGS' },
+    { id: '1234567891', name: 'Vadeli Hesap', balance: 25000.00, accountType: 'FIXED_DEPOSIT' },
+    { id: '1234567892', name: 'Döviz Hesabı (USD)', balance: 2500.75, accountType: 'FOREIGN_CURRENCY' }
   ];
+
+  // Context'ten gelen hesapları kullan, yoksa placeholder'ları kullan
+  const userAccounts = accounts && accounts.length > 0 ? accounts : defaultUserAccounts;
+
+  useEffect(() => {
+    // Component mounted - user authentication is handled by context
+  }, [user]);
+
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -94,24 +108,52 @@ function MoneyTransfer({ currentUser, onLogout }) {
 
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setTransferSuccess(true);
+    try {
+      const transferPayload = {
+        fromAccountId: transferData.fromAccount,
+        toAccountNumber: transferData.toAccount,
+        recipientName: transferData.recipientName,
+        amount: parseFloat(transferData.amount),
+        description: transferData.description,
+        transferType: transferData.transferType,
+        fee: getTransferFee()
+      };
       
-      // Reset form after success
-      setTimeout(() => {
-        setTransferSuccess(false);
-        setTransferData({
-          fromAccount: '',
-          toAccount: '',
-          recipientName: '',
-          amount: '',
-          description: '',
-          transferType: 'eft'
-        });
-      }, 3000);
-    }, 2000);
+      const response = await transferAPI.createTransfer(transferPayload);
+      
+      if (response && response.success) {
+        setTransferSuccess(true);
+        
+        // Bakiyeyi güncelle
+        if (response.newBalance !== undefined) {
+          updateBalance(response.newBalance);
+        }
+        
+        // Transfer completed successfully
+        
+        // Reset form after success
+        setTimeout(() => {
+          setTransferSuccess(false);
+          setTransferData({
+            fromAccount: '',
+            toAccount: '',
+            recipientName: '',
+            amount: '',
+            description: '',
+            transferType: 'eft'
+          });
+        }, 3000);
+      } else {
+        const errorMessage = response?.message || 'Transfer işlemi başarısız oldu.';
+        setErrors({ general: errorMessage });
+      }
+    } catch (error) {
+      console.error('Transfer error:', error);
+      const errorMessage = error.message || 'Transfer işlemi sırasında bir hata oluştu. Lütfen tekrar deneyin.';
+      setErrors({ general: errorMessage });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getTransferFee = () => {
